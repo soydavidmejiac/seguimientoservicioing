@@ -1,6 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 
-const DB_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.NEON_DATABASE_URL;
+const DB_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
+  Object.entries(process.env).find(([k, v]) => /_URL$/.test(k) && !/UNPOOLED|NON_POOLING/.test(k) && /^postgres(ql)?:\/\//.test(v || ''))?.[1];
 const PIN = process.env.REPORTES_PIN || '';
 
 let ready = false;
