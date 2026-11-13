@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080c18">
+<title>ING · Reportes de Servicio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c18;--s1:rgba(255,255,255,.04);--s2:rgba(255,255,255,.07);--bd:rgba(255,255,255,.09);--txt:#f1f4fb;--mut:#8e9ab3;--dim:#5d6882;--gold:#f2c46d;--ok:#22d3a0;--late:#fbbf24;--red:#ff5d6c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;color:var(--txt);font-family:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;background:var(--bg)}
+body{min-height:100vh;padding-bottom:40px;background:radial-gradient(900px 500px at 110% -10%,rgba(242,196,109,.12),transparent 60%),radial-gradient(800px 600px at -20% 10%,rgba(34,211,160,.08),transparent 60%),var(--bg);background-attachment:fixed}
+button,input,select{font-family:inherit}
+.wrap{max-width:900px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 14px 0}
+header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+header .tx{flex:1}
+header small{display:block;font-size:10.5px;letter-spacing:.18em;color:var(--gold);font-weight:800}
+header h1{margin:2px 0 0;font-size:21px;font-weight:800}
+.back{color:var(--mut);text-decoration:none;font-size:13px;font-weight:700;border:1px solid var(--bd);padding:8px 12px;border-radius:12px;background:var(--s1)}
+.card{border-radius:22px;background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--bd);padding:16px;margin-bottom:14px}
+.card h2{margin:0 0 12px;font-size:15px;font-weight:800}
+.modes{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 4px}
+.modes::-webkit-scrollbar{display:none}
+.mode{flex:none;padding:9px 13px;border-radius:99px;border:1px solid var(--bd);background:var(--s1);color:var(--mut);font-size:13px;font-weight:800;cursor:pointer}
+.mode.on{background:var(--gold);color:#1b1406;border-color:var(--gold)}
+.inputs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:flex-end}
+.inputs label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:var(--mut);flex:1;min-width:130px}
+input,select{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--txt);font-weight:700;font-size:16px;border-radius:12px;padding:12px;color-scheme:dark}
+.range{margin-top:10px;font-size:13px;color:var(--gold);font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{padding:14px;border-radius:18px;background:rgba(0,0,0,.2);border:1px solid var(--bd)}
+.kpi b{display:block;font-size:28px;font-weight:800;letter-spacing:-.02em}
+.kpi span{font-size:12px;font-weight:700;color:var(--mut)}
+.kpi small{display:block;font-size:11.5px;color:var(--dim);font-weight:600;margin-top:2px}
+.split{display:flex;height:12px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.08);margin:6px 0 10px}
+.split i{display:block;height:100%}
+.leg{display:flex;gap:16px;font-size:12.5px;font-weight:700;color:var(--mut);flex-wrap:wrap}
+.leg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+.chart{width:100%;overflow-x:auto}
+.chart svg{display:block}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd);font-size:14px}
+.row:last-child{border-bottom:0}
+.row .n{flex:1;font-weight:600;line-height:1.3}
+.row .v{font-weight:800;white-space:nowrap}
+.row .sub{display:block;font-size:12px;color:var(--mut);font-weight:600}
+.bar{height:6px;border-radius:99px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px}
+.inf{border:1px solid var(--bd);border-radius:16px;padding:12px 14px;margin-top:8px;background:rgba(0,0,0,.18);cursor:pointer}
+.inf .h{display:flex;align-items:center;gap:10px}
+.inf .d{flex:1}
+.inf .d b{display:block;font-size:14.5px}
+.inf .d span{font-size:12.5px;color:var(--mut);font-weight:600}
+.badge{font-size:13px;font-weight:800;padding:6px 10px;border-radius:12px}
+.inf .det{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--bd);font-size:13.5px;line-height:1.5}
+.inf.open .det{display:block}
+.det h4{margin:10px 0 4px;font-size:12px;letter-spacing:.06em;color:var(--mut)}
+.det .del{margin-top:12px;background:none;border:1px solid rgba(255,93,108,.5);color:var(--red);border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:800;font-size:14.5px;cursor:pointer;background:var(--gold);color:#1b1406}
+.btn.ghost{background:var(--s2);color:var(--txt);border:1px solid var(--bd)}
+.empty{text-align:center;color:var(--mut);padding:30px 10px;font-weight:600}
+.lock{max-width:380px;margin:12vh auto 0;text-align:center}
+.lock .ic{font-size:46px}
+.lock input{text-align:center;font-size:26px;letter-spacing:.4em;margin:16px 0 10px}
+.err{color:var(--red);font-weight:700;font-size:13.5px;min-height:20px}
+.load{opacity:.5;pointer-events:none}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-160%);z-index:50;width:min(92vw,420px);padding:13px 16px;border-radius:16px;font-weight:700;font-size:14px;text-align:center;color:#fff;background:rgba(22,163,74,.95);transition:transform .35s}
+.toast.show{transform:translate(-50%,0)}.toast.bad{background:rgba(220,50,70,.95)}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.sheet{width:100%;max-width:520px;background:#121a2d;border:1px solid var(--bd);border-radius:26px 26px 0 0;padding:22px 18px calc(18px + env(safe-area-inset-bottom))}
+.sheet h3{margin:0 0 6px}.sheet p{margin:0 0 16px;color:var(--mut);font-size:14px}
+.sheet button{width:100%;padding:15px;border-radius:14px;font-size:15px;font-weight:800;margin-top:8px;border:1px solid var(--bd);background:rgba(255,255,255,.06);color:var(--txt);cursor:pointer}
+.sheet .danger{background:var(--red);border-color:var(--red);color:#fff}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="sheet"><h3>¿Eliminar este informe?</h3><p id="mTxt"></p><button class="danger" id="mYes">Sí, eliminar</button><button id="mNo">Cancelar</button></div></div>
+
+<div id="lock" class="wrap"><div class="lock">
+  <div class="ic">🔒</div><h1 style="margin:10px 0 4px;font-size:22px">Reportes de Servicio</h1>
+  <p style="color:var(--mut);margin:0">Ingresa el PIN para ver los informes</p>
+  <input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="••••">
+  <div class="err" id="pinErr"></div>
+  <button class="btn" id="pinGo" style="width:100%">Entrar</button>
+  <p style="margin-top:18px"><a href="/" style="color:var(--gold);font-weight:700;text-decoration:none">← Volver al formulario</a></p>
+</div></div>
+
+<div id="main" class="wrap" style="display:none">
+  <header><div class="tx"><small>IGLESIA NUEVA GENERACIÓN</small><h1>Reportes de Servicio</h1></div><a class="back" href="/">← Formulario</a></header>
+
+  <div class="card">
+    <div class="modes" id="modes"></div>
+    <div class="inputs" id="inputs"></div>
+    <div class="range" id="range"></div>
+  </div>
+
+  <div id="out"></div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const PKEY='ing_rep_pin';
+let PIN='';try{PIN=localStorage.getItem(PKEY)||''}catch(e){}
+let DATA=[],delId=null;
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const now=new Date(),Y=now.getFullYear(),M=now.getMonth();
+const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtD=s=>{const[y,m,d]=s.split('-').map(Number);const t=new Date(y,m-1,d).toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short',year:'numeric'});return t.charAt(0).toUpperCase()+t.slice(1)};
+const lastDay=(y,m)=>new Date(y,m+1,0).getDate();
+let toastT;function toast(m,bad){const t=$('#toast');t.textContent=m;t.className='toast show'+(bad?' bad':'');clearTimeout(toastT);toastT=setTimeout(()=>t.className='toast',2800)}
+
+/* ---------- Períodos ---------- */
+const years=[];for(let y=Y;y>=Y-5;y--)years.push(y);
+const ySel=id=>`<select id="${id}">${years.map(y=>`<option>${y}</option>`).join('')}</select>`;
+const MODES={
+  fecha:{t:'Fecha',ui:()=>`<label>Fecha<input type="date" id="f1" value="${iso(now)}"></label>`,r:()=>{const v=$('#f1').value;return[v,v,v?fmtD(v):'']}},
+  mes:{t:'Mes',ui:()=>`<label>Mes<input type="month" id="f1" value="${Y}-${pad(M+1)}"></label>`,r:()=>{const[y,m]=$('#f1').value.split('-').map(Number);return[`${y}-${pad(m)}-01`,`${y}-${pad(m)}-${lastDay(y,m-1)}`,`${MESES[m-1]} ${y}`]}},
+  cuatri:{t:'Cuatrimestre',ui:()=>`<label>Cuatrimestre<select id="f1"><option value="0">1° · Ene – Abr</option><option value="1">2° · May – Ago</option><option value="2">3° · Sep – Dic</option></select></label><label>Año${ySel('f2')}</label>`,
+    init:()=>{$('#f1').value=String(Math.floor(M/4))},r:()=>{const c=+$('#f1').value,y=+$('#f2').value,a=c*4,b=a+3;return[`${y}-${pad(a+1)}-01`,`${y}-${pad(b+1)}-${lastDay(y,b)}`,`${c+1}° cuatrimestre ${y} (${MESES[a]} – ${MESES[b]})`]}},
+  semestre:{t:'Semestre',ui:()=>`<label>Semestre<select id="f1"><option value="0">1° · Ene – Jun</option><option value="1">2° · Jul – Dic</option></select></label><label>Año${ySel('f2')}</label>`,
+    init:()=>{$('#f1').value=String(M<6?0:1)},r:()=>{const s=+$('#f1').value,y=+$('#f2').value;return s?[`${y}-07-01`,`${y}-12-31`,`2° semestre ${y}`]:[`${y}-01-01`,`${y}-06-30`,`1° semestre ${y}`]}},
+  anio:{t:'Año',ui:()=>`<label>Año${ySel('f1')}</label>`,r:()=>{const y=$('#f1').value;return[`${y}-01-01`,`${y}-12-31`,`Año ${y}`]}},
+  custom:{t:'Personalizado',ui:()=>`<label>Desde<input type="date" id="f1" value="${Y}-${pad(M+1)}-01"></label><label>Hasta<input type="date" id="f2" value="${iso(now)}"></label>`,r:()=>{const a=$('#f1').value,b=$('#f2').value;return[a,b,a&&b?`${fmtD(a)} → ${fmtD(b)}`:'']}},
+};
+let mode='mes';
+function drawModes(){$('#modes').innerHTML=Object.entries(MODES).map(([k,m])=>`<button class="mode ${k===mode?'on':''}" data-m="${k}">${m.t}</button>`).join('');
+  $('#inputs').innerHTML=MODES[mode].ui()+`<button class="btn ghost" id="csv" style="flex:none">⬇ Excel</button>`;MODES[mode].init&&MODES[mode].init();query();}
+$('#modes').onclick=e=>{const b=e.target.closest('[data-m]');if(!b)return;mode=b.dataset.m;drawModes()};
+$('#inputs').addEventListener('change',query);
+$('#inputs').addEventListener('click',e=>{if(e.target.id==='csv')exportCSV()});
+
+/* ---------- Datos ---------- */
+let qT,curLabel='',curRange=['',''];
+function query(){clearTimeout(qT);qT=setTimeout(load,120)}
+async function load(){
+  const[d,h,label]=MODES[mode].r();if(!d||!h)return;
+  if(d>h){$('#range').textContent='La fecha "desde" es posterior a "hasta"';return}
+  curLabel=label;curRange=[d,h];$('#range').textContent='📅 '+label;
+  $('#out').classList.add('load');
+  try{const r=await fetch(`/api/informes?desde=${d}&hasta=${h}`,{headers:{'x-pin':PIN}});
+    if(r.status===401){lock('PIN incorrecto');return}
+    const j=await r.json();if(!r.ok)throw new Error(j.error||r.status);DATA=j.informes||[];render();
+  }catch(e){$('#out').innerHTML=`<div class="card empty">No se pudieron cargar los informes.<br><small>${esc(e.message)}</small></div>`}
+  finally{$('#out').classList.remove('load')}
+}
+const effColor=p=>p>=90?'var(--ok)':p>=75?'var(--late)':'var(--red)';
+const ATTL={adultos:'Adultos / Miembros',servidores:'Servidores',ninos:'Niños Arca de Noé',teens:'Teens',nuevos:'Invitados / Nuevos'};
+
+function render(){
+  const n=DATA.length;
+  if(!n){$('#out').innerHTML=`<div class="card empty">No hay informes en este período.</div>`;return}
+  let ok=0,late=0,na=0,delay=0,att=0;const attB={},tasks={},dirs={};
+  DATA.forEach(r=>{ok+=r.a_tiempo;late+=r.tarde;na+=r.na;delay+=r.atraso_min;att+=r.asistencia_total;
+    Object.entries(r.asistencia||{}).forEach(([k,v])=>attB[k]=(attB[k]||0)+(+v||0));
+    (r.tareas||[]).forEach(t=>{const k=t.tarea;tasks[k]=tasks[k]||{n:0,late:0,min:0,ev:0};if(t.estado==='ok'||t.estado==='late')tasks[k].ev++;if(t.estado==='late'){tasks[k].late++;tasks[k].min+=t.atraso||0}});
+    const D=dirs[r.director]=dirs[r.director]||{n:0,ok:0,ev:0};D.n++;D.ok+=r.a_tiempo;D.ev+=r.a_tiempo+r.tarde;});
+  const ev=ok+late,pOk=ev?Math.round(ok/ev*100):0,pL=ev?100-pOk:0;
+  const topT=Object.entries(tasks).filter(([,v])=>v.late).sort((a,b)=>b[1].late-a[1].late||b[1].min-a[1].min).slice(0,8);
+  const chron=[...DATA].reverse();
+
+  let h=`<div class="card"><h2>Resumen · ${esc(curLabel)}</h2><div class="kpis">
+    <div class="kpi"><b style="color:${effColor(pOk)}">${pOk}%</b><span>Eficiencia promedio</span><small>${pOk>=90?'🟢 Excelente':pOk>=75?'🟡 Bueno':'🔴 Por mejorar'}</small></div>
+    <div class="kpi"><b>${n}</b><span>Servicios reportados</span></div>
+    <div class="kpi"><b>${att.toLocaleString('es-CL')}</b><span>Asistencia total</span><small>Promedio ${Math.round(att/n)} por servicio</small></div>
+    <div class="kpi"><b>${delay} min</b><span>Atraso acumulado</span><small>Promedio ${Math.round(delay/n)} min por servicio</small></div></div>
+    <div style="margin-top:16px"><div class="split"><i style="width:${pOk}%;background:var(--ok)"></i><i style="width:${pL}%;background:var(--late)"></i></div>
+    <div class="leg"><span><i style="background:var(--ok)"></i>A tiempo ${pOk}% (${ok})</span><span><i style="background:var(--late)"></i>Fuera de tiempo ${pL}% (${late})</span><span>N/A ${na}</span></div></div></div>`;
+
+  if(n>1){const W=Math.max(chron.length*46,300),H=170,bw=26;
+    h+=`<div class="card"><h2>Eficiencia por servicio</h2><div class="chart"><svg width="${W}" height="${H+34}">
+      ${[0,50,100].map(v=>`<line x1="0" x2="${W}" y1="${H-v/100*H+6}" y2="${H-v/100*H+6}" stroke="rgba(255,255,255,.07)"/>`).join('')}
+      ${chron.map((r,i)=>{const x=i*46+10,bh=Math.max(3,r.eficiencia/100*H);return `<rect x="${x}" y="${H-bh+6}" width="${bw}" height="${bh}" rx="6" fill="${effColor(r.eficiencia)}"><title>${r.fecha}: ${r.eficiencia}%</title></rect>
+        <text x="${x+bw/2}" y="${H-bh}" fill="#f1f4fb" font-size="11" font-weight="800" text-anchor="middle">${r.eficiencia}</text>
+        <text x="${x+bw/2}" y="${H+24}" fill="#8e9ab3" font-size="10.5" font-weight="700" text-anchor="middle">${r.fecha.slice(8)}/${r.fecha.slice(5,7)}</text>`}).join('')}
+    </svg></div></div>`;}
+
+  const maxA=Math.max(...Object.values(attB),1);
+  h+=`<div class="card"><h2>Asistencia por grupo</h2>${Object.keys(ATTL).map(k=>{const v=attB[k]||0;return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between"><span class="n">${ATTL[k]}</span><span class="v">${v.toLocaleString('es-CL')} <span style="color:var(--mut);font-weight:600;font-size:12px">· prom ${Math.round(v/n)}</span></span></div><div class="bar"><i style="width:${v/maxA*100}%;background:var(--gold)"></i></div></div>`}).join('')}</div>`;
+
+  h+=`<div class="card"><h2>Tareas con más atrasos</h2>${topT.length?topT.map(([k,v])=>`<div class="row"><span class="n">${esc(k)}<span class="sub">${v.late} de ${v.ev} veces tarde · prom ${Math.round(v.min/v.late)} min</span></span><span class="v" style="color:var(--late)">${Math.round(v.late/v.ev*100)}%</span></div>`).join(''):`<div class="empty" style="padding:10px">🎉 Sin atrasos en este período</div>`}</div>`;
+
+  h+=`<div class="card"><h2>Por Director de Culto</h2>${Object.entries(dirs).sort((a,b)=>b[1].n-a[1].n).map(([k,v])=>{const p=v.ev?Math.round(v.ok/v.ev*100):0;return `<div class="row"><span class="n">${esc(k)}<span class="sub">${v.n} servicio${v.n>1?'s':''}</span></span><span class="v" style="color:${effColor(p)}">${p}%</span></div>`}).join('')}</div>`;
+
+  h+=`<div class="card"><h2>Informes (${n})</h2>${DATA.map(r=>{const lt=(r.tareas||[]).filter(t=>t.estado==='late');
+    return `<div class="inf" data-id="${r.id}"><div class="h"><div class="d"><b>${fmtD(r.fecha)}</b><span>${esc(r.director)} · 👥 ${r.asistencia_total}</span></div><span class="badge" style="background:rgba(255,255,255,.06);color:${effColor(r.eficiencia)}">${r.eficiencia}%</span></div>
+    <div class="det">✅ ${r.a_tiempo} a tiempo · ⚠️ ${r.tarde} fuera de tiempo · ➖ ${r.na} N/A · ⏱ ${r.atraso_min} min
+      ${lt.length?`<h4>ATRASOS</h4>${lt.map(t=>`• <b>${esc(t.tarea)}</b> — prog. ${esc(t.programado)}, real ${esc(t.hora_real||'')} (+${t.atraso} min)${t.motivo?`<br>&nbsp;&nbsp;💬 <i>${esc(t.motivo)}</i>`:''}`).join('<br>')}`:''}
+      <h4>ASISTENCIA</h4>${Object.keys(ATTL).map(k=>`${ATTL[k]}: <b>${(r.asistencia||{})[k]??0}</b>`).join(' · ')}
+      <h4>OBSERVACIÓN FINAL</h4>${esc(r.observacion)||'—'}
+      <br><button class="del" data-del="${r.id}" data-f="${r.fecha}" data-n="${esc(r.director)}">Eliminar informe</button></div></div>`}).join('')}</div>`;
+  $('#out').innerHTML=h;
+}
+$('#out').addEventListener('click',e=>{
+  const d=e.target.closest('[data-del]');if(d){e.stopPropagation();delId=d.dataset.del;$('#mTxt').textContent=`${fmtD(d.dataset.f)} · ${d.dataset.n}`;$('#modal').classList.add('show');return}
+  const c=e.target.closest('.inf');if(c)c.classList.toggle('open');});
+$('#mNo').onclick=()=>$('#modal').classList.remove('show');
+$('#mYes').onclick=async()=>{$('#modal').classList.remove('show');
+  try{const r=await fetch(`/api/informes?id=${delId}`,{method:'DELETE',headers:{'x-pin':PIN}});if(!r.ok)throw 0;toast('Informe eliminado');load()}catch(e){toast('No se pudo eliminar',true)}};
+
+/* ---------- Exportar ---------- */
+function exportCSV(){
+  if(!DATA.length){toast('No hay informes para exportar',true);return}
+  const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  const head=['Fecha','Director de Culto','Eficiencia %','A tiempo','Fuera de tiempo','N/A','Atraso (min)','Asistencia total',...Object.values(ATTL),'Tareas atrasadas','Observación final'];
+  const rows=DATA.map(r=>[r.fecha,r.director,r.eficiencia,r.a_tiempo,r.tarde,r.na,r.atraso_min,r.asistencia_total,...Object.keys(ATTL).map(k=>(r.asistencia||{})[k]??0),
+    (r.tareas||[]).filter(t=>t.estado==='late').map(t=>`${t.tarea} (+${t.atraso} min${t.motivo?': '+t.motivo:''})`).join(' | '),r.observacion]);
+  const csv='﻿'+[head,...rows].map(r=>r.map(q).join(';')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download=`informes-ING_${curRange[0]}_a_${curRange[1]}.csv`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+}
+
+/* ---------- PIN ---------- */
+function lock(msg){$('#main').style.display='none';$('#lock').style.display='';$('#pinErr').textContent=msg||'';try{localStorage.removeItem(PKEY)}catch(e){}PIN=''}
+async function tryPin(p){
+  $('#pinErr').textContent='';
+  const r=await fetch('/api/informes?desde=2999-01-01&hasta=2999-01-01',{headers:{'x-pin':p}}).catch(()=>null);
+  if(!r){$('#pinErr').textContent='Sin conexión';return}
+  if(r.status===401){$('#pinErr').textContent='PIN incorrecto';return}
+  if(!r.ok){$('#pinErr').textContent='La base de datos aún no está conectada';return}
+  PIN=p;try{localStorage.setItem(PKEY,p)}catch(e){}
+  $('#lock').style.display='none';$('#main').style.display='';drawModes();
+}
+$('#pinGo').onclick=()=>tryPin($('#pin').value.trim());
+$('#pin').addEventListener('keydown',e=>{if(e.key==='Enter')tryPin($('#pin').value.trim())});
+if(PIN)tryPin(PIN);
+</script>
+</body>
+</html>
